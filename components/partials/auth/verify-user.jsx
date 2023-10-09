@@ -16,7 +16,7 @@ const schema = yup
   .required();
 
 
-const API_URL = 'http://18.209.171.138:8000';
+const API_URL = 'http://3.87.109.137:8000';
 
 
 

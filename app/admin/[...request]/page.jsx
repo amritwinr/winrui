@@ -14,7 +14,7 @@ const UserRequests = () => {
     try {
       setIsLoading(true)
       const response = await fetch(
-        `http://18.209.171.138:8000/api/user/admin_user_request`,
+        `http://3.87.109.137:8000/api/user/admin_user_request`,
         {
           method: "GET", // or 'GET', 'PUT', etc.
           headers: {
@@ -53,7 +53,7 @@ const UserRequests = () => {
   const postData = async (value) => {
     try {
       const response = await fetch(
-        `http://18.209.171.138:8000/api/user/admin_user_request`,
+        `http://3.87.109.137:8000/api/user/admin_user_request`,
         {
           method: "POST", // or 'GET', 'PUT', etc.
           headers: {
