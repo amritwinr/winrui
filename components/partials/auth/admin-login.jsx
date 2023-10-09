@@ -35,7 +35,7 @@ const AdminForm = () => {
     }
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/user/admin_login`,
+        `http://18.209.171.138:8000/api/user/admin_login`,
         {
           method: "POST", // or 'GET', 'PUT', etc.
           headers: {

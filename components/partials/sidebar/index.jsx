@@ -21,7 +21,7 @@ const Sidebar = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/broker/side_bar`,
+        `http://18.209.171.138:8000/api/broker/side_bar`,
         {
           method: "GET", // or 'GET', 'PUT', etc.
           headers: {

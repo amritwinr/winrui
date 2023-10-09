@@ -24,7 +24,7 @@ const schema = yup
   })
   .required();
 
-const API_URL = process.env.NEXT_PUBLIC_NLP_API_URL ;
+const API_URL = 'http://18.209.171.138:8000' ;
 
 const LoginForm = () => {
   const [changePassword, setChangePassword] = useState(false);
