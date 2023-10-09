@@ -1,0 +1,1 @@
+export const apiUrl = `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/broker/`

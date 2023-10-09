@@ -1,0 +1,38 @@
+.form {
+  position: fixed;
+  background: #fff;
+  padding: 30px;
+  z-index: 9999;
+  top: 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  max-height: 90vh;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px #ccc;
+  overflow-y: scroll;
+}
+
+.inputContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.input {
+  border: 1px solid #eee;
+  border-radius: 3px;
+  padding: 5px 10px;
+}
+
+.save{
+    background-color: rgb(77, 187, 57) !important;
+    width: 100px;
+    margin: 15px 0;
+    border-radius: 10px;
+    padding: 10px;
+    color: #fff;
+}
