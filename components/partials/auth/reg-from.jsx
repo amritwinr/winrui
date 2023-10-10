@@ -13,7 +13,7 @@ const schema = yup.object({
   phone: yup.string(),
 });
 
-const API_URL = 'http://3.87.109.137:8000';
+const API_URL = process.env.NEXT_PUBLIC_NLP_API_URL;
 
 const RegForm = () => {
   const dispatch = useDispatch();
