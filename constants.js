@@ -1,1 +1,2 @@
-export const apiUrl = `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/broker/`
+export const apiUrl = `http://52.55.72.246:8080/api/broker/`
+export const url = `http://52.55.72.246:8080`

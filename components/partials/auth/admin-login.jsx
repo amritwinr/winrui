@@ -9,6 +9,7 @@ import { handleLogin } from "./store"
 import { toast } from "react-toastify"
 import ForgotPass from "./forgot-pass"
 import RegForm from "./reg-from"
+import { url } from "@/constants"
 const schema = yup
   .object({
     email: yup.string().email("Invalid email").required("Email is Required"),
@@ -35,7 +36,7 @@ const AdminForm = () => {
     }
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/user/admin_login`,
+        `${url}/api/user/admin_login`,
         {
           method: "POST", // or 'GET', 'PUT', etc.
           headers: {

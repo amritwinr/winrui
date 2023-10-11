@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { url } from "@/constants";
 
 require('dotenv').config()
 
@@ -16,7 +17,7 @@ const schema = yup
   .required();
 
 
-const API_URL = process.env.NEXT_PUBLIC_NLP_API_URL;
+const API_URL = url;
 
 
 

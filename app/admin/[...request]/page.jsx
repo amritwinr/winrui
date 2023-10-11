@@ -2,6 +2,7 @@
 import ListLoading from "@/components/skeleton/ListLoading"
 import Badge from "@/components/ui/Badge"
 import Card from "@/components/ui/Card"
+import { url } from "@/constants"
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import SimpleBar from "simplebar-react"
@@ -14,7 +15,7 @@ const UserRequests = () => {
     try {
       setIsLoading(true)
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/user/admin_user_request`,
+        `${url}/api/user/admin_user_request`,
         {
           method: "GET", // or 'GET', 'PUT', etc.
           headers: {
@@ -53,7 +54,7 @@ const UserRequests = () => {
   const postData = async (value) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/user/admin_user_request`,
+        `${url}/api/user/admin_user_request`,
         {
           method: "POST", // or 'GET', 'PUT', etc.
           headers: {

@@ -10,6 +10,7 @@ import { Switch } from "@headlessui/react"
 import Swicth from "@/components/ui/Switch"
 import { toast } from "react-toastify"
 import { useSelector } from "react-redux"
+import { url } from "@/constants"
 
 const Sidebar = () => {
   const { isAuth } = useSelector((state) => state.auth)
@@ -21,7 +22,7 @@ const Sidebar = () => {
   const getData = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NLP_API_URL}/api/broker/side_bar`,
+        `${url}/api/broker/side_bar`,
         {
           method: "GET", // or 'GET', 'PUT', etc.
           headers: {

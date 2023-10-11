@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
+import { url } from "@/constants";
 
 const schema = yup.object({
   username: yup.string(),
@@ -13,7 +14,7 @@ const schema = yup.object({
   phone: yup.string(),
 });
 
-const API_URL = process.env.NEXT_PUBLIC_NLP_API_URL;
+const API_URL = url;
 
 const RegForm = () => {
   const dispatch = useDispatch();

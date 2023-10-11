@@ -9,6 +9,7 @@ import { handleLogin } from "./store";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import { Icon } from "@iconify/react";
+import { url } from "@/constants";
 const schema = yup
   .object({
     email: yup.string(),
@@ -24,7 +25,7 @@ const schema = yup
   })
   .required();
 
-const API_URL = process.env.NEXT_PUBLIC_NLP_API_URL ;
+const API_URL = url ;
 
 const LoginForm = () => {
   const [changePassword, setChangePassword] = useState(false);
