@@ -9,7 +9,6 @@ import { handleLogin } from "./store";
 import { toast } from "react-toastify";
 import Button from "@/components/ui/Button";
 import { Icon } from "@iconify/react";
-import { url } from "@/constants";
 const schema = yup
   .object({
     email: yup.string(),
