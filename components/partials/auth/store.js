@@ -96,6 +96,24 @@ export const authSlice = createSlice({
         theme: "light",
       });
     },
+    handleLogin: (state, action) => {
+      state.isAuth = action.payload;
+      // save isAuth in local storage
+      if (typeof window !== "undefined") {
+        window?.localStorage.setItem("isAuth", JSON.stringify(state.isAuth));
+      }
+      toast.success("User logged in successfully", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    },
+    
     handleLogout: (state, action) => {
       state.isAuth = action.payload;
       // remove isAuth from local storage

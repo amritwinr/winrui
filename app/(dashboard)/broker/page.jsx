@@ -46,13 +46,13 @@ export const topFilterLists = [
 ];
 const EmailPage = () => {
 	const { isAuth } = useSelector((state) => state.auth);
+	const user = isAuth?.userId
 
 	const { width, breakpoints } = useWidth();
 	const dispatch = useDispatch();
 	const [showAdd, setShowAdd] = useState(false);
 	const { mobileEmailSidebar, emails, search, filter, singleModal } =
 		useSelector((state) => state.email);
-	const [switches, setSwitches] = useState(topFilterLists);
 
 	const [currentId, setCurrentId] = useState('');
 	const [isLoading, setLoading] = useState(false);
@@ -67,6 +67,14 @@ const EmailPage = () => {
 
 	const api_url = apiUrl
 
+	const brokerData = (arr) => currentBrokerData && currentBrokerData[1]
+		?.filter(item => !["id", "user", "created_at", "updated_at", "is_main", "quantity", "status", "access_token"].includes(item)).map((item) => {
+			return {
+				title: item?.split("_")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" "), short: item,
+				show: arr?.includes(item) ? true : false
+			}
+		})
+
 	/* all broker details goes here, so we can define data dynamically, if anyone want to add more field just add that 
 	field name as key in data array, and add that value from currentBrokerData[0].new_field. if you want to show in table then set show to true*/
 	const broker_details = [
@@ -76,65 +84,57 @@ const EmailPage = () => {
 			submitData: `${api_url}add_broker_creds`,
 			updateQuantity: `${api_url}update_broker_quantity`,
 			place_order: `${api_url}place_orders_by_master`,
-			modfiy: {
-				broker_api_key: showModify?.data?.broker_api_key,
-			},
-			data: [
-				{
-					"User Id": currentBrokerData[0]?.broker_user_id,
-					short: "broker_user_id",
-					show: true,
-				},
-				{
-					"Api Key": currentBrokerData[0]?.broker_api_key,
-					short: "broker_api_key",
-					show: true,
-				},
-				{
-					"TWOTA": currentBrokerData[0]?.do_twofa,
-					short: "broker_do_twofa"
-				},
-				{
-					"MPIN": currentBrokerData[0]?.mpin,
-					short: "mpin"
-				},
-			]
-		}, {
+			data: brokerData(["broker_user_id", "broker_api_key"])
+		},
+		{
 			id: 2,
 			broker: "Finvasia",
 			submitData: `${api_url}add_finvasia_broker_creds`,
 			updateQuantity: `${api_url}update_finvasia_broker_quantity`,
 			place_order: `${api_url}place_order_by_finvasia_master`,
-			modfiy: {
-				app_key: showModify?.data?.app_key,
-			},
-			data: [
-				{
+			data: brokerData(["user_id", "app_key"])
 
-					"User Id": currentBrokerData[1]?.broker_user_id,
-					short: "broker_user_id",
-					show: true
-				},
-				{
-					"APP Key": currentBrokerData[1]?.app_key,
-					short: "app_key",
-					show: true
-				},
-				{
-					"Token": currentBrokerData[1]?.twoFA,
-					short: "twoFA"
-				},
-				{
-					"VC": currentBrokerData[1]?.vc,
-					short: "vc"
-				},
-				{
-					"Imei": currentBrokerData[1]?.imei,
-					short: "imei"
-				},
-			]
-
-		}
+		},
+		{
+			id: 3,
+			broker: "Angel One",
+			submitData: `${api_url}add_angel_broker_creds`,
+			updateQuantity: `${api_url}update_angel_broker_quantity`,
+			place_order: `${api_url}place_order_by_angel_master`,
+			data: brokerData(["user_id", "api_key"])
+		},
+		{
+			id: 4,
+			broker: "Upstox",
+			submitData: `${api_url}add_upstox_broker_creds`,
+			updateQuantity: `${api_url}update_upstox_broker_quantity`,
+			place_order: `${api_url}place_order_by_upstox_master`,
+			data: brokerData(["user_id", "api_key"])
+		},
+		{
+			id: 5,
+			broker: "Fyers",
+			submitData: `${api_url}add_fyers_broker_creds`,
+			updateQuantity: `${api_url}update_fyers_broker_quantity`,
+			place_order: `${api_url}place_order_by_fyers_master`,
+			data: brokerData(["fy_id", "app_id"])
+		},
+		{
+			id: 6,
+			broker: "Flattrade",
+			submitData: `${api_url}add_flattrade_broker_creds`,
+			updateQuantity: `${api_url}update_flattrade_broker_quantity`,
+			place_order: `${api_url}place_order_by_flattrade_master`,
+			data: brokerData(["user_id", "api_key"])
+		},
+		{
+			id: 7,
+			broker: "5paisa",
+			submitData: `${api_url}add_5paisa_broker_creds`,
+			updateQuantity: `${api_url}update_5paisa_broker_quantity`,
+			place_order: `${api_url}place_order_by_5paisa_master`,
+			data: brokerData(["user_id", "app_name"])
+		},
 	]
 
 	// this are dynamic urls for each api page
@@ -142,7 +142,6 @@ const EmailPage = () => {
 	const updateQuantity = broker_details?.find(i => i?.broker === currentId[0]?.name)?.updateQuantity
 	const placeOrder = broker_details?.find(i => i?.broker === currentId[0]?.name)?.place_order
 
-	var button = 1
 	/* this function is switches the is_background_running_task to 0 and 1 and if quantity changes and 
 	if is_background_running_task is 0 then it sets all status of child accounts to 0 and then calls the getData function*/
 	const handleSwitchChange = async (id, name, type) => {
@@ -158,31 +157,15 @@ const EmailPage = () => {
 			setData(updatedSwitches);
 		}
 
-		
-		const swicth_status = updatedSwitches?.find((e) => e.id === id)?.user_status
 
-		// this is to switch the is_background_running_task
-		await axios.put(submitUri, {
-			id,
-			to_update: {
-				is_background_task_running: !currentBrokerData[id]?.is_background_task_running
-			},
-		}, {
-			headers: {
-				'Content-Type': 'application/json',
-				jwttoken: isAuth.jwt,
-				userid: isAuth.userId,
-			},
-		}).then(() => {
-			// this is to get all data
-			getBrokerData(currentId[0]?.name)
-		})
+		const swicth_status = updatedSwitches?.find((e) => e.id === id)?.user_status
 
 		// this checks that if this is 0 then sets all status to 0
 		if (swicth_status === 0) {
 			await axios.put(submitUri, {
 				updateType: "many",
-				status: '0'
+				status: '0',
+				user
 			}, {
 				headers: {
 					'Content-Type': 'application/json',
@@ -194,7 +177,6 @@ const EmailPage = () => {
 			})
 		} else {
 			try {
-				button = swicth_status
 				const x = data.find((e) => e.id === id);
 
 				const response = await axios.post(
@@ -202,9 +184,7 @@ const EmailPage = () => {
 					{
 						type: "login",
 						broker_name: x.name,
-						quantity: currentBrokerData[1].quantity,
-						// user_status: type === "quantity" ? 1 : currentBrokerData[id]?.is_background_task_running.
-						button,
+						user: user
 					},
 					{
 						headers: {
@@ -215,7 +195,7 @@ const EmailPage = () => {
 					}
 				);
 
-				
+
 
 				if (response) {
 					getBrokerData(currentId[0].name)
@@ -311,6 +291,7 @@ const EmailPage = () => {
 
 	// this is to submit data for each selected broker
 	const onSubmit = async (data) => {
+		console.log({ "user----": data })
 		try {
 			const response = await fetch(
 				submitUri,
@@ -322,7 +303,7 @@ const EmailPage = () => {
 						userid: isAuth.userId,
 					},
 					body: JSON.stringify({
-						broker_name: currentId[0]?.name,
+						user,
 						...data,
 					}),
 				}
@@ -366,7 +347,7 @@ const EmailPage = () => {
 		try {
 			const uri = broker_details?.find(i => i?.broker === name)?.submitData
 			const response = await fetch(
-				`${uri}?${queryParams}`,
+				`${uri}?user=${user}`,
 				{
 					method: 'GET', // or 'GET', 'PUT', etc.
 					headers: {
@@ -379,7 +360,6 @@ const EmailPage = () => {
 
 			if (response.ok) {
 				const data = await response.json();
-				console.log({ data })
 				setCurrentBrokerData(data?.data);
 			} else {
 				const errorResponse = await response.json();
@@ -427,13 +407,14 @@ const EmailPage = () => {
 							...upData,
 							status: "0"
 						},
-						broker_user_id: showModify?.data?.broker_user_id,
+						// broker_user_id: showModify?.data?.broker_user_id,
 						...modificationDetails
 					}),
 				}
 			);
 
 			if (response.ok) {
+				setUpdata({})
 				const data = await response.json();
 				setShowModify({ id: null, show: false, data: null })
 				getBrokerData(currentId[0]?.name);
@@ -513,10 +494,11 @@ const EmailPage = () => {
 
 	// it changes the quantity of selected account of selected broker
 	const handleQuantityUpdate = async (newQuantity, itemId) => {
-		const updatedItems = currentBrokerData.map((item) =>
+		const updatedItems = currentBrokerData[0].map((item) =>
 			item.id === itemId ? { ...item, quantity: newQuantity } : item
 		);
-		setCurrentBrokerData(updatedItems);
+
+		setCurrentBrokerData(prev => [updatedItems, prev[1]]);
 
 		try {
 			await axios.post(
@@ -535,7 +517,7 @@ const EmailPage = () => {
 			).then((response) => {
 				console.log({ response })
 				if (response.status == 200) {
-					handleSwitchChange(currentId[0].id, currentId[0].name, 'quantity')
+
 				} else {
 					const errorResponse = response.data.errorMessage;
 					throw new Error(
@@ -584,23 +566,23 @@ const EmailPage = () => {
 				userid: isAuth.userId,
 			},
 		}).then(async (r) => {
-			toast.success(
-				r.data?.errorMessage || 'Success',
-				{
-					position: 'top-right',
-					autoClose: 1500,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: 'colored',
-				}
-			);
 			// console.log({ data: r.data?.errorMessage })
-			if (r.data?.errorMessage === 'Success') {
+			if (r.status === 200) {
+				toast.success(
+					r.data?.errorMessage || 'Success',
+					{
+						position: 'top-right',
+						autoClose: 1500,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: 'colored',
+					}
+				);
 
-				const uri = `${apiUrl}add_finvasia_broker_creds`
+				const uri = submitUri
 
 				await axios.put(uri, {
 					id: value?.id,
@@ -617,9 +599,6 @@ const EmailPage = () => {
 					getBrokerData(currentId[0]?.name);
 				})
 
-				// autoLogin?.find(i => i === value?.broker_user_id) === value?.broker_user_id ?
-				// 	setAutoLogin(prev => prev?.filter(item => item !== value.broker_user_id)) :
-				// 	setAutoLogin(prev => [...prev, value.broker_user_id])
 			} else {
 				toast.error(
 					r.data?.errorMessage || 'Credentials are not correct',
@@ -661,7 +640,9 @@ const EmailPage = () => {
 					handleSaveClick={handleSaveClick} />
 			)}
 
-			{showAdd && <TodoHeader onSubmit={onSubmit} id={currentId[0]?.id} />}
+			{showAdd && <TodoHeader onSubmit={onSubmit}
+				broker={broker_details?.find(i => i?.id === currentId[0]?.id)?.data}
+			/>}
 			<ToastContainer />
 
 			<div className='flex md:space-x-5 app_height  relative rtl:space-x-reverse'>
@@ -747,7 +728,7 @@ const EmailPage = () => {
 																	scope='col'
 																	className=' table-th w-1/6 '
 																>
-																	{Object.keys(item)[0]}
+																	{item?.title}
 																</th>
 															)
 														})}
@@ -781,112 +762,110 @@ const EmailPage = () => {
 												</thead>
 												<tbody className='bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700 '>
 													{currentBrokerData &&
-														currentBrokerData?.map(
-															(value, index) => (
-																<tr className='hover:bg-hover '>
+														currentBrokerData[0]?.filter(item => item?.user == user)?.map((value, index) => (
+															<tr className='hover:bg-hover '>
+																{broker_details?.find((i) => i.id === currentId[0].id).data?.filter(i => i?.show === true)?.map((item, i) => {
 
-																	{broker_details?.find((i) => i.id === currentId[0].id).data?.filter(i => i?.show === true)?.map((item, i) => {
+																	return (
+																		<td
+																			key={i}
+																			scope='col'
+																			className=' table-th w-1/6 '
+																		>
+																			{value[item.short]}
+																		</td>
+																	)
+																})}
 
-																		return (
-																			<td
-																				key={i}
-																				scope='col'
-																				className=' table-th w-1/6 '
-																			>
-																				{value[item.short]}
-																			</td>
-																		)
-																	})}
-
-																	<td className='table-td'>
-																		<div className=''>
-																			{index !== 0 &&
-																				<input
-																					type='number'
-																					value={
-																						value?.quantity
-																					}
-																					onChange={(
+																<td className='table-td'>
+																	<div className=''>
+																		{index !== 0 &&
+																			<input
+																				type='number'
+																				value={
+																					value?.quantity
+																				}
+																				onChange={(
+																					e
+																				) => {
+																					handleQuantityUpdate(
 																						e
-																					) => {
-																						handleQuantityUpdate(
-																							e
-																								.target
-																								.value,
-																							value?.id
-																						);
-																					}}
-																					className='form-control py-2 '
-																				/>
-																			}
-																		</div>
-																	</td>
-																	<td className='table-td'>
-
-																		<Badge
-																			className='bg-success-500 text-white cursor-pointer'
-																			onClick={() => {
-																				const oppIndex = showModify?.id !== index
-																				// this are two variables for changing data when we first set index and value to setModify, 
-																				// and then press other modify button without pressing cancel button, then data changes in showModify,
-																				// but problem occurs in input value of modify form
-																				const changeOppIndex = (oppIndex ? index : null)
-																				const changeOppVal = (oppIndex ? value : null)
-
-																				setShowModify(prev => (
-																					{
-																						id: prev?.id === null ? index : null,
-																						data: prev?.data === null ? value : null
-																					}
-																				))
-																			}}
-																		>
-																			{/* due to unchangable data cancel button appear on every account, and cancel modify form when we
-																			click on any cancel button, to modify other account data, first cancel it, and then select that data */}
-																			{showModify?.id === index ? 'Cancel' : 'Modify'}
-																		</Badge>
-
-																	</td>
-																	<td className='table-td'>
-																		<Badge
-																			className='bg-danger-500 text-white cursor-pointer'
-																			onClick={() =>
-																				handleDelete(
-																					value?.id
-																				)
-																			}
-																		>
-																			Delete
-																		</Badge>
-																	</td>
-																	<td className='table-td '>
-																		{value?.is_main ? (
-																			<Icon
-																				icon='mdi:administrator-outline'
-																				color='#ffc300'
-																				width='25'
+																							.target
+																							.value,
+																						value?.id
+																					);
+																				}}
+																				className='form-control py-2 '
 																			/>
-																		) : (
-																			''
-																		)}
-																	</td>
-																	<td className='table-td '>
-																		{value?.status == '1' ? (
-																			<div className='rounded-full bg-green-500 w-[10px] h-[10px] text-red-500'></div>
-																		) : (
-																			<div className='rounded-full bg-red-500 w-[10px] h-[10px] text-red-500'></div>
-																		)}
-																	</td>
+																		}
+																	</div>
+																</td>
+																<td className='table-td'>
 
-																	<td className='table-td '>
-																		{' '}
-																		<Swicth
-																			value={value?.status == '1'}
-																			onChange={() => handleCred(value)}
+																	<Badge
+																		className='bg-success-500 text-white cursor-pointer'
+																		onClick={() => {
+																			const oppIndex = showModify?.id !== index
+																			// this are two variables for changing data when we first set index and value to setModify, 
+																			// and then press other modify button without pressing cancel button, then data changes in showModify,
+																			// but problem occurs in input value of modify form
+																			const changeOppIndex = (oppIndex ? index : null)
+																			const changeOppVal = (oppIndex ? value : null)
+
+																			setShowModify(prev => (
+																				{
+																					id: prev?.id === null ? index : null,
+																					data: prev?.data === null ? value : null
+																				}
+																			))
+																		}}
+																	>
+																		{/* due to unchangable data cancel button appear on every account, and cancel modify form when we
+																			click on any cancel button, to modify other account data, first cancel it, and then select that data */}
+																		{showModify?.id === index ? 'Cancel' : 'Modify'}
+																	</Badge>
+
+																</td>
+																<td className='table-td'>
+																	<Badge
+																		className='bg-danger-500 text-white cursor-pointer'
+																		onClick={() =>
+																			handleDelete(
+																				value?.id
+																			)
+																		}
+																	>
+																		Delete
+																	</Badge>
+																</td>
+																<td className='table-td '>
+																	{value?.is_main ? (
+																		<Icon
+																			icon='mdi:administrator-outline'
+																			color='#ffc300'
+																			width='25'
 																		/>
-																	</td>
-																</tr>
-															)
+																	) : (
+																		''
+																	)}
+																</td>
+																<td className='table-td '>
+																	{value?.status == '1' ? (
+																		<div className='rounded-full bg-green-500 w-[10px] h-[10px] text-red-500'></div>
+																	) : (
+																		<div className='rounded-full bg-red-500 w-[10px] h-[10px] text-red-500'></div>
+																	)}
+																</td>
+
+																<td className='table-td '>
+																	{' '}
+																	<Swicth
+																		value={value?.status == '1'}
+																		onChange={() => handleCred(value)}
+																	/>
+																</td>
+															</tr>
+														)
 														)}
 												</tbody>
 											</table>

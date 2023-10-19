@@ -1,4 +1,5 @@
 "use client"
+import EmailPage from "@/app/(dashboard)/broker/page"
 import ListLoading from "@/components/skeleton/ListLoading"
 import Badge from "@/components/ui/Badge"
 import Card from "@/components/ui/Card"
@@ -89,6 +90,7 @@ const UserRequests = () => {
   useEffect(() => {
     getData()
   }, [])
+
   return (
     <div className=" md:space-x-5 app_height overflow-hidden relative rtl:space-x-reverse">
       {/* overlay */}
@@ -150,6 +152,8 @@ const UserRequests = () => {
           </Card>
         </SimpleBar>
       </div>
+
+      {/* <EmailPage type="admin"/> */}
     </div>
   )
 }
