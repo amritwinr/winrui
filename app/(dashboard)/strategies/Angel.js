@@ -55,7 +55,7 @@ const AngelPage = ({ title }) => {
 
     useEffect(() => {
         setLoading(true)
-        if (isAuth?.userName !== "suryanshpandey") {
+        if (isAuth?.userName !== "romil776") {
             setLoading(false)
             router?.replace('/not-found')
         }
