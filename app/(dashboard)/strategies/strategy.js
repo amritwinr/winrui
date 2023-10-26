@@ -53,7 +53,7 @@ const StrategyPage = () => {
 
     useEffect(() => {
         setLoading(true)
-        if (isAuth?.userName === "romil776") {
+        if (isAuth?.userName !== "romil776") {
             setLoading(false)
             router?.replace('/not-found')
         }

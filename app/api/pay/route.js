@@ -38,7 +38,7 @@ export async function POST(req) {
 
     paytmParams.body = {
         "requestType": "Payment",
-        "mid": "vMrfbz82358829675624",
+        "mid": "YTOqYA06348773439021",
         "websiteName": "WEBSTAGING",
         "orderId": 'ORDERID_98765',
         "callbackUrl": `http://localhost:3000/api/Payout`,
@@ -63,7 +63,7 @@ export async function POST(req) {
         var post_data = JSON.stringify(paytmParams);
         console.log(post_data)
 
-        const mid = "vMrfbz82358829675624"
+        const mid = "YTOqYA06348773439021"
 
         var options = {
 
@@ -82,7 +82,7 @@ export async function POST(req) {
             },
         };
 
-        await axios.post(`https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=${mid}&orderId=ORDERID_98765`, post_data, {
+        await axios.post(`https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=${mid}&orderId=ORDERID_98765`, post_data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': post_data.length
