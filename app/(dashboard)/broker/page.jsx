@@ -291,7 +291,6 @@ const EmailPage = () => {
 
 	// this is to submit data for each selected broker
 	const onSubmit = async (data) => {
-		console.log({ "user----": data })
 		try {
 			const response = await fetch(
 				submitUri,
@@ -304,6 +303,7 @@ const EmailPage = () => {
 					},
 					body: JSON.stringify({
 						user,
+						unique_code: Math.random().toString(36).substr(2, 9) + Date.now().toString(36),
 						...data,
 					}),
 				}

@@ -1,6 +1,5 @@
 import React from 'react'
-import AngelPage from './Angel'
-import Finvasia from './Finvasia'
+import StrategyPage from './strategy'
 
 const Strategy = () => {
 
@@ -15,7 +14,7 @@ const Strategy = () => {
     return (
         <div>
 
-            <AngelPage />
+            <StrategyPage />
 
         </div>
     )

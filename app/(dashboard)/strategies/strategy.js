@@ -32,11 +32,9 @@ export const topFilterLists = [
     },
 ];
 
-const AngelPage = ({ title }) => {
+const StrategyPage = () => {
     const router = useRouter()
     const { isAuth } = useSelector((state) => state.auth);
-    const user = isAuth?.userId
-
     const { width, breakpoints } = useWidth();
     const [showAdd, setShowAdd] = useState(false);
     const { mobileEmailSidebar, emails, search, filter, singleModal } =
@@ -55,7 +53,7 @@ const AngelPage = ({ title }) => {
 
     useEffect(() => {
         setLoading(true)
-        if (isAuth?.userName !== "romil776") {
+        if (isAuth?.userName === "romil776") {
             setLoading(false)
             router?.replace('/not-found')
         }
@@ -93,7 +91,7 @@ const AngelPage = ({ title }) => {
                         userid: isAuth.userId,
                     },
                     body: JSON.stringify({
-                        user,
+                        user: isAuth.userId,
                         ...data,
                     }),
                 }
@@ -415,64 +413,67 @@ const AngelPage = ({ title }) => {
             getBrokerData(currentId[0]?.name);
         })
 
-        const url = `${api_url}strategy`
-        await axios.post(url, {
-            ...value
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                jwttoken: isAuth.jwt,
-                userid: isAuth.userId,
-            },
-        }).then(async (r) => {
-            // console.log({ data: r.data?.errorMessage })
-            if (r.status === 200) {
-                toast.success(
-                    r.data?.errorMessage || 'Success',
-                    {
-                        position: 'top-right',
-                        autoClose: 1500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'colored',
-                    }
-                );
+        if (value?.status === "0") {
+
+            const url = `${api_url}strategy`
+            await axios.post(url, {
+                ...value
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    jwttoken: isAuth.jwt,
+                    userid: isAuth.userId,
+                },
+            }).then(async (r) => {
+                // console.log({ data: r.data?.errorMessage })
+                if (r.status === 200) {
+                    toast.success(
+                        r.data?.errorMessage || 'Success',
+                        {
+                            position: 'top-right',
+                            autoClose: 1500,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'colored',
+                        }
+                    );
 
 
 
-            } else {
-                toast.error(
-                    r.data?.errorMessage || 'Credentials are not correct',
-                    {
-                        position: 'top-right',
-                        autoClose: 1500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'colored',
-                    }
-                );
-            }
-        }).catch(err => {
-            toast.error(
-                err.message || 'Something error',
-                {
-                    position: 'top-right',
-                    autoClose: 1500,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'colored',
+                } else {
+                    toast.error(
+                        r.data?.errorMessage || 'Credentials are not correct',
+                        {
+                            position: 'top-right',
+                            autoClose: 1500,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: 'colored',
+                        }
+                    );
                 }
-            );
-        })
+            }).catch(err => {
+                toast.error(
+                    err.message || 'Something error',
+                    {
+                        position: 'top-right',
+                        autoClose: 1500,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'colored',
+                    }
+                );
+            })
+        }
     }
 
     return (
@@ -481,10 +482,25 @@ const AngelPage = ({ title }) => {
                 <Modify data={showModify?.data}
                     value={upData}
                     setValue={(item, e) => handleInputValChange(item, e)}
-                    handleSaveClick={handleSaveClick} />
+                    handleSaveClick={handleSaveClick}
+                    removeKeys={["type"]}
+                    selectOptions={{
+                        "type": {
+                            default: "Finvasia",
+                            options: ["Finvasia", "Angel One"]
+                        },
+                    }}
+                />
             )}
 
-            {showAdd && <TodoHeader onSubmit={onSubmit} id={2} selectField
+            {showAdd && <TodoHeader onSubmit={onSubmit} id={2}
+                removeKeys={["type"]}
+                selectOptions={{
+                    "type": {
+                        default: "Finvasia",
+                        options: ["Finvasia", "Angel One"]
+                    },
+                }}
                 broker={brokerHeading}
             />}
             <ToastContainer />
@@ -712,4 +728,4 @@ const AngelPage = ({ title }) => {
     );
 };
 
-export default AngelPage;
+export default StrategyPage;
