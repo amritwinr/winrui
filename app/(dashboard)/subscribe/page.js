@@ -6,8 +6,11 @@ import axios from 'axios'
 import Script from 'next/script'
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { apiUrl } from '@/constants'
+import { useSelector } from 'react-redux'
 
 const Subscribe = () => {
+    const { isAuth } = useSelector((state) => state.auth);
 
     const data = [
         {
@@ -63,7 +66,7 @@ const Subscribe = () => {
                 }
             }
         };
-        
+
         window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
             console.log("hello")
             // after successfully updating configuration, invoke JS Checkout
@@ -75,38 +78,92 @@ const Subscribe = () => {
 
     }
 
-    const addPaypalScript = async (token) => {
-        if (typeof window !== "undefined") {
+    // const addPaypalScript = async (token) => {
+    //     if (typeof window !== "undefined") {
 
+    //         const script = document.createElement("script");
+    //         script.src = `https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/vMrfbz82358829675624.js`;
+    //         script.type = "text/javascript";
+    //         script.crossOrigin = "anonymous";
+    //         document.body.appendChild(script);
+    //     }
+    // };
+
+    const initializeRazorpay = () => {
+        return new Promise((resolve) => {
             const script = document.createElement("script");
-            script.src = `https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/vMrfbz82358829675624.js`;
-            script.type = "text/javascript";
-            script.crossOrigin = "anonymous";
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+
+            script.onload = () => {
+                resolve(true);
+            };
+            script.onerror = () => {
+                resolve(false);
+            };
+
             document.body.appendChild(script);
-        }
+        });
     };
 
-    useEffect(() => {
-        addPaypalScript()
-    }, [])
+    // const onSubmit = async (e) => {
+    //     e.preventDefault()
 
-    const onSubmit = async (e) => {
+    //     axios.post("/api/pay", {
+    //         orderId: "order1234",
+    //         amount: "1"
+    //     }).then((r) => {
+    //         const token = r?.data?.token;
+    //         onScriptLoad(token)
+    //     })
+    // }
+
+    const makePayment = async (e) => {
         e.preventDefault()
+        const res = await initializeRazorpay();
 
-        axios.post("/api/pay", {
-            orderId: "order1234",
-            amount: "1"
-        }).then((r) => {
-            const token = r?.data?.token;
-            onScriptLoad(token)
-        })
-    }
+        if (!res) {
+            alert("Razorpay SDK Failed to load");
+            return;
+        }
+
+        // Make API call to the serverless API
+        const data = await axios.post("/api/pay")
+
+        var options = {
+            key: 'rzp_test_PXt6SEeDFTb2S8', // Enter the Key ID generated from the Dashboard
+            name: "Manu Arora Pvt Ltd",
+            currency: data.data.currency,
+            amount: data.data.amount,
+            order_id: data.data.id,
+            handler: async function (response) {
+                await axios.post(`${apiUrl}subscribe`, {
+                    user: isAuth.userId, type: "", amount: data.data.amount
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        jwttoken: isAuth.jwt,
+                        userid: isAuth.userId,
+                    },
+                }).then(async (r) => {
+                    const data = r?.data?.data
+                    console.log(data)
+                })
+                // Validate payment at server - using webhooks is a better idea.
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature);
+            },
+        };
+
+        const paymentObject = new window.Razorpay(options);
+        paymentObject.open();
+    };
 
     return (
         <div className={styles.container}>
             {data?.map((item, i) => {
                 return (
-                    <form onSubmit={onSubmit} key={i} className={styles.card}>
+                    <form onSubmit={makePayment} key={i} className={styles.card}>
                         <p className={styles.type}>
                             {item?.type}
                         </p>

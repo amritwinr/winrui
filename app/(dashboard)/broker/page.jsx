@@ -68,7 +68,7 @@ const EmailPage = () => {
 	const api_url = apiUrl
 
 	const brokerData = (arr) => currentBrokerData && currentBrokerData[1]
-		?.filter(item => !["id", "user", "created_at", "updated_at", "is_main", "quantity", "status", "access_token"].includes(item)).map((item) => {
+		?.filter(item => !["id", "user", "created_at", "updated_at", "is_main", "quantity", "status", "access_token", "unique_code"].includes(item)).map((item) => {
 			return {
 				title: item?.split("_")?.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" "), short: item,
 				show: arr?.includes(item) ? true : false

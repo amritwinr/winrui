@@ -5,7 +5,7 @@ import ReactSelect from 'react-select'
 
 const Modify = ({ data, value, setValue, handleSaveClick, removeKeys, selectOptions }) => {
 
-    const excludeFields = ["id", "quantity", "status", "is_background_task_running"]
+    const excludeFields = ["id", "user", "quantity", "status", "is_background_task_running", "unique_code", "access_token"]
     return (
         <Draggable>
             <form className={styles.form}
