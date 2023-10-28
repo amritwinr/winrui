@@ -50,13 +50,12 @@ const Telegram = () => {
                         userid: isAuth.userId,
                     },
                 }).then(async (r) => {
-                    setDataLoading(false)
                     const data = r?.data?.data
                     setData(data)
                 })
             })
 
-        })()
+        })().finally(() => setDataLoading(false))
     }, [apiUrl, isAuth, apiId])
 
     const getData = async (e) => {
