@@ -25,7 +25,7 @@ const schema = yup
   })
   .required();
 
-const API_URL = url ;
+const API_URL = url;
 
 const LoginForm = () => {
   const [changePassword, setChangePassword] = useState(false);
@@ -53,6 +53,7 @@ const LoginForm = () => {
         method: "POST", // or 'GET', 'PUT', etc.
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "http://52.55.72.246"
         },
         body: JSON.stringify(body), // Send the form data to the API
       });
