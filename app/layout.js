@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
   return (
     <>
       <html lang="en">
-        <body className="font-inter  custom-tippy dashcode-app">
+        <body className="font-inter  custom-tippy dashcode-app " >
           <Provider store={store}>{children}</Provider>
         </body>
       </html>

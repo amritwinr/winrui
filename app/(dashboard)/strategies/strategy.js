@@ -484,6 +484,10 @@ const StrategyPage = () => {
                     setValue={(item, e) => handleInputValChange(item, e)}
                     handleSaveClick={handleSaveClick}
                     removeKeys={["type"]}
+                    onCancel={() => {
+                        setUpdata({})
+                        setShowModify({ id: null, show: false, data: null })
+                    }}
                     selectOptions={{
                         "type": {
                             default: "Finvasia",
@@ -495,6 +499,7 @@ const StrategyPage = () => {
 
             {showAdd && <TodoHeader onSubmit={onSubmit} id={2}
                 removeKeys={["type"]}
+                onCancel={() => setShowAdd(false)}
                 selectOptions={{
                     "type": {
                         default: "Finvasia",

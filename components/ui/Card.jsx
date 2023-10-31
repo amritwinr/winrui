@@ -46,15 +46,15 @@ const Card = ({
         </div>
       </Draggable> :
       <div
-        style={style}
         className={`
-        card rounded-md   bg-background   ${skin === "bordered"
+      card rounded-md   bg-background   ${skin === "bordered"
             ? " border border-slate-200 dark:border-slate-700"
             : "shadow-base"
           }
-   
-    ${className}
-        `}
+          
+          ${className}
+          `}
+        style={style}
       >
         {(title || subtitle) && (
           <header className={`card-header ${noborder ? "no-border" : ""}`}>
@@ -65,9 +65,9 @@ const Card = ({
             {headerslot && <div className="card-header-slot">{headerslot}</div>}
           </header>
         )}
-        <main className={`card-body ${bodyClass}`}>
+        <div className={`card-body ${bodyClass}`}>
           {children}
-        </main>
+        </div>
       </div>
   )
 }

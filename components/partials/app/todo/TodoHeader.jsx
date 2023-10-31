@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 import Select from "@/components/ui/Select"
 import ReactSelect from "react-select"
 
-const TodoHeader = ({ onSubmit, id, broker, removeKeys, selectOptions, }) => {
+const TodoHeader = ({ onCancel, onSubmit, id, broker, removeKeys, selectOptions, }) => {
   const [selectData, setSelectData] = useState({
 
   })
@@ -80,6 +80,7 @@ const TodoHeader = ({ onSubmit, id, broker, removeKeys, selectOptions, }) => {
 
           <div className=" space-y-4">
             <Button text="Submit" type="submit" className="btn-dark btn-sm" />
+            <Button text="Cancel" onClick={() => onCancel && onCancel()} type="button" className="btn-grey btn-sm" />
           </div>
         </form>
       </Card>

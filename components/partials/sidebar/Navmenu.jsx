@@ -11,6 +11,7 @@ import useSemiDark from "@/hooks/useSemiDark"
 import SwitchDark from "../header/Tools/SwitchDark"
 import Swicth from "@/components/ui/Switch"
 import useDarkmode from "@/hooks/useDarkMode"
+import styles from '@/Styles/sidebar.module.css'
 
 const Navmenu = ({ menus }) => {
   const router = useRouter()
@@ -193,7 +194,7 @@ const Navmenu = ({ menus }) => {
 
         {links?.map((item, i) => {
           return (
-            <li className="single-sidebar-menu">
+            <li className={`single-sidebar-menu ${styles.link}`}>
               <span className="menu-link">
                 <span className="menu-icon">
                   <Icon icon={item?.icon} />
@@ -205,7 +206,7 @@ const Navmenu = ({ menus }) => {
             </li>
           )
         })}
-       
+
         <li className="single-sidebar-menu">
           <span className="menu-link">
             <span className="menu-icon">

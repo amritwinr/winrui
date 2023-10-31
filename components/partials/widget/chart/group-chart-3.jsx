@@ -65,7 +65,7 @@ const GroupChart3 = () => {
           <span className="block  text-2xl text-slate-900 dark:text-white font-medium mb-1">
             {item.count}
           </span>
-          <div className="flex space-x-2 rtl:space-x-reverse">
+          {/* <div className="flex space-x-2 rtl:space-x-reverse">
             <div className={` flex-none text-xl  ${item.text} `}>
               <Icon icon={item.icon} />
             </div>
@@ -74,7 +74,7 @@ const GroupChart3 = () => {
                 {item.percent}
               </span>
             </div>
-          </div>
+          </div> */}
         </div>
       ))}
     </>

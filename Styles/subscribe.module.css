@@ -37,15 +37,37 @@
   width: 100%;
 }
 
-.list li{
-    color: #888;
+.list li {
+  color: #888;
 }
 
 .button {
-  background: linear-gradient(to right,rgb(223, 59, 59), rgb(185, 32, 185));
+  background: linear-gradient(to right, rgb(223, 59, 59), rgb(185, 32, 185));
+  background-color: rgb(223, 59, 59);
   width: 100%;
   border-radius: 5px;
   padding: 8px 0;
   margin-top: 20px;
   color: #fff;
+}
+
+.timeContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeBtn{
+  border: .1rem solid #ccc;
+  overflow: hidden;
+  border-radius: 2rem;
+}
+
+.timeBtn button{
+  padding: .5rem 1rem;
+}
+
+.activeBtn{
+  background-color: #ccc;
 }

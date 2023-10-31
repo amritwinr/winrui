@@ -28,7 +28,7 @@ const Login = () => {
             </div>
             <div className="absolute left-0 2xl:bottom-[-160px] bottom-[-130px] h-full w-full z-[-1]">
               <img
-                src="/assets/images/auth/ils1.svg"
+                src="/assets/images/auth/logo.jpg"
                 alt=""
                 className="h-full w-full object-contain"
               />

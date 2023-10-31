@@ -2,8 +2,9 @@ import React from 'react'
 import styles from '@/Styles/modify.module.css'
 import Draggable from 'react-draggable'
 import ReactSelect from 'react-select'
+import Button from '../ui/Button'
 
-const Modify = ({ data, value, setValue, handleSaveClick, removeKeys, selectOptions }) => {
+const Modify = ({ onCancel, data, value, setValue, handleSaveClick, removeKeys, selectOptions }) => {
 
     const excludeFields = ["id", "user", "quantity", "status", "is_background_task_running", "unique_code", "access_token"]
     return (
@@ -33,7 +34,7 @@ const Modify = ({ data, value, setValue, handleSaveClick, removeKeys, selectOpti
                                         label: it, value: it
                                     }))
                                 }
-                                   className={styles.selectBtn}
+                                    className={styles.selectBtn}
                                     value={value[item[1]]}
                                     onChange={val => {
                                         const v = {
@@ -51,7 +52,17 @@ const Modify = ({ data, value, setValue, handleSaveClick, removeKeys, selectOpti
                     }
                 })}
 
-                <button type="submit" className={styles.save}>Save</button>
+                <div style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 5,
+                    marginTop: 10
+                }}>
+                    <Button type="submit" className="btn-dark btn-sm">Update</Button>
+                    <Button type="submit" onClick={() => onCancel && onCancel()} className="btn-sm">Cancel</Button>
+                </div>
             </form>
         </Draggable>
     )

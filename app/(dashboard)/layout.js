@@ -65,23 +65,21 @@ export default function RootLayout({ children }) {
   return (
     <div
       dir={isRtl ? "rtl" : "ltr"}
-      className={`app-warp ${isDark ? "dark" : "light"} ${
-        skin === "bordered" ? "skin--bordered" : "skin--default"
-      }
+      className={`app-warp ${isDark ? "dark" : "light"} ${skin === "bordered" ? "skin--bordered" : "skin--default"
+        }
       ${navbarType === "floating" ? "has-floating" : ""}
       `}
     >
       <ToastContainer />
       <Header className={width > breakpoints.xl ? switchHeaderClass() : ""} />
       {menuType === "vertical" && width > breakpoints.xl && !menuHidden && (
-        <Sidebar />          
+        <Sidebar />
       )}
       <MobileMenu
-        className={`${
-          width < breakpoints.xl && mobileMenu
-            ? "left-0 visible opacity-100  z-[9999]"
-            : "left-[-300px] invisible opacity-0  z-[-999] "
-        }`}
+        className={`${width < breakpoints.xl && mobileMenu
+          ? "left-0 visible opacity-100  z-[9999]"
+          : "left-[-300px] invisible opacity-0  z-[-999] "
+          }`}
       />
       {/* mobile menu overlay*/}
       {width < breakpoints.xl && mobileMenu && (
@@ -91,9 +89,8 @@ export default function RootLayout({ children }) {
         ></div>
       )}
       <div
-        className={`content-wrapper transition-all duration-150 ${
-          width > 1280 ? switchHeaderClass() : ""
-        }`}
+        className={`content-wrapper transition-all duration-150 ${width > 1280 ? switchHeaderClass() : ""
+          }`}
       >
         {/* md:min-h-screen will h-full*/}
         <div className="page-content   page-min-height  ">

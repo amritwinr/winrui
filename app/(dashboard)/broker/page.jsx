@@ -23,6 +23,7 @@ import TodoHeader from '@/components/partials/app/todo/TodoHeader';
 import axios from 'axios';
 import { apiUrl } from '@/constants';
 import Modify from '@/components/Broker/Modify';
+import styles from "@/Styles/page.module.css"
 
 const ListLoading = dynamic(() => import('@/components/skeleton/ListLoading'), {
 	ssr: false,
@@ -636,11 +637,16 @@ const EmailPage = () => {
 			{showModify?.id !== null && (
 				<Modify data={showModify?.data}
 					value={upData}
+					onCancel={() => {
+						setUpdata({})
+						setShowModify({ id: null, show: false, data: null })
+					}}
 					setValue={(item, e) => handleInputValChange(item, e)}
 					handleSaveClick={handleSaveClick} />
 			)}
 
 			{showAdd && <TodoHeader onSubmit={onSubmit}
+				onCancel={() => setShowAdd(false)}
 				broker={broker_details?.find(i => i?.id === currentId[0]?.id)?.data}
 			/>}
 			<ToastContainer />
@@ -697,21 +703,26 @@ const EmailPage = () => {
 					></div>
 				)}
 				<div className='flex-1'>
-					<SimpleBar className='h-full all-todos'>
+					<SimpleBar className='h-full all-todos overflow-hidden' style={{
+						width: '99%',
+					}}>
 						{currentId ? (
 							<>
 								<Card
 									title={currentId[0]?.name}
 									noborder
 									className='app_height bg-background overflow-x-scroll'
+									style={{
+										width: "100%",
+									}}
 									headerslot={
 										<div className='relative'>
 											<Button
+												className={styles.button}
 												onClick={() => setShowAdd(prev => !prev)}
 											>
 												add
 											</Button>
-
 										</div>
 									}
 								>
