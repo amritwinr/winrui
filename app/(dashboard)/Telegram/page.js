@@ -83,6 +83,7 @@ const Telegram = () => {
 
     const onSave = async (e) => {
         e.preventDefault()
+        console.log("data")
 
         await axios.put(`${apiUrl}add_telegram`, {
             id: codeId,
@@ -99,6 +100,7 @@ const Telegram = () => {
             },
         }).then(async (r) => {
             const data = r?.data?.data
+            console.log(data)
             setCodeId(data.id)
         })
     }
