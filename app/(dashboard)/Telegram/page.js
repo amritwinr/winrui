@@ -41,18 +41,22 @@ const Telegram = () => {
                 const telHash = telData?.api_hash
                 const telPhone = telData?.phone
 
-                await axios.post(`${apiUrl}telegram`, {
-                    user: isAuth.userId, apiId: telApi, apiHash: telHash, phone: telPhone
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        jwttoken: isAuth.jwt,
-                        userid: isAuth.userId,
-                    },
-                }).then(async (r) => {
-                    const data = r?.data?.data
-                    setData(data)
-                })
+                if (telData) {
+
+                    await axios.post(`${apiUrl}telegram`, {
+                        user: isAuth.userId, apiId: telApi, apiHash: telHash, phone: telPhone
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            jwttoken: isAuth.jwt,
+                            userid: isAuth.userId,
+                        },
+                    }).then(async (r) => {
+                        const data = r?.data?.data
+                        setData(data)
+                    })
+                }
+
             })
 
         })().finally(() => setDataLoading(false))
