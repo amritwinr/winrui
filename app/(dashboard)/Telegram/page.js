@@ -36,10 +36,10 @@ const Telegram = () => {
                     userid: isAuth.userId,
                 },
             }).then(async (r) => {
-                const telData = r.data.data[0];
-                const telApi = telData.api_id
-                const telHash = telData.api_hash
-                const telPhone = telData.phone
+                const telData = r?.data?.data[0];
+                const telApi = telData?.api_id
+                const telHash = telData?.api_hash
+                const telPhone = telData?.phone
 
                 await axios.post(`${apiUrl}telegram`, {
                     user: isAuth.userId, apiId: telApi, apiHash: telHash, phone: telPhone
