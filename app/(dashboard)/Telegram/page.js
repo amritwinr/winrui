@@ -10,6 +10,7 @@ import axios from 'axios'
 import { apiUrl } from '@/constants'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import ReactSelect from 'react-select'
 
 const Telegram = () => {
     const { isAuth } = useSelector((state) => state.auth);
@@ -25,6 +26,24 @@ const Telegram = () => {
     const [dataLoading, setDataLoading] = useState(false)
 
     const [codeId, setCodeId] = useState(null)
+    const [listData, setListData] = useState(null)
+
+    const getListData = async () => {
+        await axios.get(`${apiUrl}subscribe_telegram?user=${isAuth.userId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                jwttoken: isAuth.jwt,
+                userid: isAuth.userId,
+            },
+        }).then(async (r) => {
+            const data = r?.data?.data;
+            setListData(data)
+        })
+    }
+
+    useEffect(() => {
+        getListData()
+    }, [])
 
     useEffect(() => {
         (async () => {
@@ -62,8 +81,7 @@ const Telegram = () => {
         })().finally(() => setDataLoading(false))
     }, [apiUrl, isAuth, apiId])
 
-    const getData = async (e) => {
-        e.preventDefault()
+    const getData = async () => {
         setIsOtp(true)
 
         await axios.post(`${apiUrl}telegram`, {
@@ -144,20 +162,142 @@ const Telegram = () => {
 
                     {data?.length > 0 &&
                         <div className={styles.list}>
-                            {data?.map((item, i) => {
-                                return (
-                                    <div key={i} className={styles.listItem}>
-                                        <p>{item}</p>
-                                        <button>Subscribe</button>
-                                    </div>
-                                )
-                            })}
+                            {data?.map((item, i) => <List item={item} key={i} getListData={getListData} listData={listData?.find(i => i?.name === item)} setListData={setListData} />)}
                         </div>
                     }
                 </>
             }
         </div>
     )
+}
+
+const List = ({ item, getListData, listData, setListData }) => {
+    const { isAuth } = useSelector((state) => state.auth);
+    const [id, setId] = useState(listData?.id)
+    const [symbols, setSymbols] = useState(null);
+    const [quantity, setQuantity] = useState(listData?.quantity);
+    const [loading, setLoading] = useState(false)
+
+    const onSubscribe = async (e) => {
+        setLoading(true)
+
+        await axios.post(`${apiUrl}subscribe_telegram`, {
+            user: isAuth?.userId, quantity, name: item, symbols
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                jwttoken: isAuth.jwt,
+                userid: isAuth.userId,
+            },
+        }).then(async (r) => {
+            setId(r.data.data.id)
+            await getListData()
+
+            await axios.post(`${apiUrl}place_order_by_telegram`, {
+                id: r.data.data.id, user: isAuth?.userId, quantity, name: item, symbols
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    jwttoken: isAuth.jwt,
+                    userid: isAuth.userId,
+                },
+            });
+        }).finally(() => { setLoading(false) })
+    }
+
+    const onUnsubscribe = async (e) => {
+        setLoading(true)
+
+        await fetch(
+            `${apiUrl}subscribe_telegram`,
+            {
+                method: 'DELETE', // or 'GET', 'PUT', etc.
+                headers: {
+                    'Content-Type': 'application/json',
+                    jwttoken: isAuth.jwt,
+                    userid: isAuth.userId,
+                },
+                body: JSON.stringify({
+                    id: id,
+                }),
+            }
+        ).then(async () => {
+            setId(null)
+            await getListData()
+        }).finally(() => { setLoading(false) });
+    }
+
+    const handleQuantityUpdate = async (newValue) => {
+        await axios.put(
+            `${apiUrl}subscribe_telegram`,
+            {
+                id,
+                to_update: newValue
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    jwttoken: isAuth.jwt,
+                    userid: isAuth.userId,
+                },
+            }
+        )
+
+    };
+
+    return (
+        <div className={styles.listItem}>
+            <p>{item}</p>
+            <div className={styles.listBtn}>
+                <ReactSelect
+                    isMulti
+                    
+                    onChange={(e) => {
+                        const val = e.map(i => i?.value)
+
+                        id &&
+                            handleQuantityUpdate({
+                                symbols:
+                                    val.join(",")
+                            })
+
+                        setSymbols(val.join(","))
+                    }}
+                    options={[
+                        {
+                            label: "NIFTY", value: "NIFTY"
+                        },
+                        {
+                            label: "50", value: "50"
+                        }
+                    ]}
+                />
+                <input
+                    type='number'
+                    value={
+                        quantity
+                    }
+                    onChange={(
+                        e
+                    ) => {
+                        id &&
+                            handleQuantityUpdate({
+                                quantity:
+                                    e
+                                        .target
+                                        .value,
+                            })
+
+                        setQuantity(e.target.value)
+                    }}
+                    className='form-control py-2'
+                    style={{
+                        width: 100
+                    }}
+                />
+                <button onClick={id ? onUnsubscribe : onSubscribe}>{id ? "Unsubscribe" : "Subscribe"}</button>
+            </div>
+        </div>)
 }
 
 export default Telegram
