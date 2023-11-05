@@ -81,7 +81,8 @@ const Telegram = () => {
         })().finally(() => setDataLoading(false))
     }, [apiUrl, isAuth, apiId])
 
-    const getData = async () => {
+    const getData = async (e) => {
+        e.preventDefault()
         setIsOtp(true)
 
         await axios.post(`${apiUrl}telegram`, {
