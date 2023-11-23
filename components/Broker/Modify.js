@@ -27,6 +27,7 @@ const Modify = ({ onCancel, data, value, setValue, handleSaveClick, removeKeys, 
                             </div>
                         )
                     } else if (removeKeys?.length > 0 && removeKeys?.includes(item[0])) {
+                        
                         return (
                             <div className={styles.inputContainer}>
                                 <ReactSelect options={
@@ -35,7 +36,7 @@ const Modify = ({ onCancel, data, value, setValue, handleSaveClick, removeKeys, 
                                     }))
                                 }
                                     className={styles.selectBtn}
-                                    value={value[item[1]]}
+                                    value={{ label: value[item[0]] || item[1], value: value[item[0]] }}
                                     onChange={val => {
                                         const v = {
                                             target: {
@@ -45,7 +46,7 @@ const Modify = ({ onCancel, data, value, setValue, handleSaveClick, removeKeys, 
                                         setValue(item[0], v)
                                     }}
                                     placeholder={item[0]?.split("_")?.join(" ")?.toUpperCase()}
-                                    defaultValue={item[1]}
+                                    defaultValue={{ label: item[1], value: item[1] }}
                                     name="type" />
                             </div>
                         )

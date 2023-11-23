@@ -94,7 +94,7 @@ const Alert = () => {
             submitData: `${api_url}add_finvasia_trading_view`,
             getBrokerData: `${api_url}add_finvasia_broker_creds`,
             updateQuantity: `${api_url}update_finvasia_trading_view`,
-            data: brokerData(["symbol", "exchange"])
+            data: brokerData(["symbol", "exchange", "strike_price", "expiry", "market_type", "edge_size", "target", "stoploss"])
 
         },
         {
